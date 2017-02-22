@@ -56,10 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLayer\DirtyModelParser.cs" />
-    <Compile Include="BusinessLayer\QuestionnariesDTO.cs" />
-    <Compile Include="BusinessLayer\TSVExportHelper.cs" />
-    <Compile Include="BusinessLayer\TSVImportHelper.cs" />
+    <Compile Include="Infrastructure\ITSVToModelConverter.cs" />
+    <Compile Include="Infrastructure\IDirtyModelParser.cs" />
+    <Compile Include="BusinessLayer\ImportHelper.cs" />
+    <Compile Include="Infrastructure\IUnitOfWorkFactory.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\QuestionnariesDTO.cs" />
+    <Compile Include="BusinessLayer\TSVToModelConverter.cs" />
     <Compile Include="BusinessLayer\UnitOfWork.cs" />
+    <Compile Include="BusinessLayer\UnitOfWorkFactory.cs" />
     <Compile Include="DataAccessLayer\Model.cs" />
     <Compile Include="DataAccessLayer\Questionnaire.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +73,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

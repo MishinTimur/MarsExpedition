@@ -51,8 +51,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BusinessLayer\DirtyModelParserTests.cs" />
-    <Compile Include="BusinessLayer\TSVExportHelperTests.cs" />
-    <Compile Include="BusinessLayer\TSVImportHelperTests.cs" />
+    <Compile Include="BusinessLayer\ImportHelperTests.cs" />
+    <Compile Include="BusinessLayer\TSVToModelConverterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

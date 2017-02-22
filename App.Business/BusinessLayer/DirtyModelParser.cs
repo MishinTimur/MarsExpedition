@@ -12,7 +12,7 @@ using com.google.i18n.phonenumbers;
 
 namespace App.Business.BusinessLayer
 {
-    public class DirtyModelParser
+    public class DirtyModelParser : IDirtyModelParser
     {
         public string ParseName(string input)
         {

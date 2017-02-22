@@ -5,17 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App.Business.DataAccessLayer;
+using App.Business.Infrastructure;
 
 namespace App.Business.BusinessLayer
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly Model mContext = new Model();
 
         public void AddOrUpdate(Questionnaire questionnaire)
         {
             if (questionnaire.ID == Guid.Empty)
+            {
+                questionnaire.ID = Guid.NewGuid();
                 mContext.Questionnaires.Add(questionnaire);
+            }
             else
                 mContext.Entry(questionnaire).State = EntityState.Modified;
         }
