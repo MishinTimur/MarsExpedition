@@ -20,7 +20,7 @@ namespace App.Business.BusinessLayer
             mUnitOfWorkFactory = unitOfWorkFactory ?? new UnitOfWorkFactory();
         }
 
-        public async Task Import(Stream fileStream)
+        public async Task<int> Import(Stream fileStream)
         {
             using (var uof = mUnitOfWorkFactory.CreateUnitOfWork())
             using (var sr = new StreamReader(fileStream))
@@ -35,7 +35,7 @@ namespace App.Business.BusinessLayer
                     }
                     catch { }
                 }
-                await uof.SaveAsync();
+                return await uof.SaveAsync();
             }
         }
     }

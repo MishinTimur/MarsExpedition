@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Desktop", "App.Desktop\App.Desktop.csproj", "{B9983AD5-1F03-4C19-B16F-70F6B6D15808}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desktop", "App.Desktop\Desktop.csproj", "{B9983AD5-1F03-4C19-B16F-70F6B6D15808}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Business", "App.Business\App.Business.csproj", "{FBD28569-6E0B-41A5-A42F-06E402083DF2}"
 EndProject

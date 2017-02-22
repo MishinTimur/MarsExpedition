@@ -21,34 +21,6 @@ namespace App.Business.Tests.BusinessLayer
             Assert.AreEqual(2, res.TotalCount);
         }
 
-        [TestMethod]
-        public void Convert_firstItem_IsCorrect()
-        {
-            var res = GetResultFromImport();
-
-            var firstItem = res.Items.First();
-
-            Assert.AreEqual("Иванов Иван Иванович", firstItem.Name, "first: Name");
-            Assert.AreEqual(new DateTime(1980, 12, 23), firstItem.DateOfBirth, "first: DateOfBirth");
-            Assert.AreEqual("ivanov_ivan@test.com", firstItem.Email, "first: Email");
-            Assert.AreEqual("+79118546524", firstItem.Phone, "first: Phone");
-        }
-
-        [TestMethod]
-        public void Convert_lastItem_IsCorrect()
-        {
-            var res = GetResultFromImport();
-
-            var lastItem = res.Items.Last();
-
-            Assert.AreEqual("Петров Петр Петрович", lastItem.Name, "last: Name");
-            Assert.AreEqual(new DateTime(1955, 07, 04), lastItem.DateOfBirth, "last: DateOfBirth");
-            Assert.AreEqual("petrov_petr@test.com", lastItem.Email, "last: Email");
-            Assert.AreEqual("+79095258763", lastItem.Phone, "last: Phone");
-
-        }
-
-
         public QuestionnariesDTO GetResultFromImport()
         {
             var factory = new UnitOfWorkFactoryMock();
