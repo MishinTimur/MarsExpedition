@@ -27,7 +27,7 @@ namespace App.Business.BusinessLayer
         public async Task<QuestionnariesDTO> GetItems(int page, int itemsPerPage)
         {
             int count = await mContext.Questionnaires.CountAsync();
-            var items = await mContext.Questionnaires.Skip(page*itemsPerPage).Take(itemsPerPage).ToListAsync();
+            var items = await mContext.Questionnaires.OrderBy(a => a.ID).Skip(page*itemsPerPage).Take(itemsPerPage).ToListAsync();
 
             return new QuestionnariesDTO()
             {

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App.Business.BusinessLayer;
+using App.Business.DataAccessLayer;
 using App.Business.Infrastructure;
-using Desktop.Model;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 
 namespace Desktop.ViewModel
@@ -41,11 +41,13 @@ namespace Desktop.ViewModel
         }
 
         private int mTotalCount;
-
         public int TotalCount
         {
             get { return mTotalCount; }
-            set { Set(() => TotalCount, ref mTotalCount, value); }
+            set
+            {
+                Set(() => TotalCount, ref mTotalCount, value);
+            }
         }
 
         private ObservableCollection<Questionnaire> mItems;
@@ -70,30 +72,21 @@ namespace Desktop.ViewModel
                 {
                     var res = await uof.GetItems(CurrentPage, cItemsPerPage);
                     TotalCount = res.TotalCount;
-                    Items = new ObservableCollection<Questionnaire>(
-                        res.Items.Select(a => new Questionnaire()
-                    {
-                        ID = a.ID,
-                        DateOfBirth = a.DateOfBirth,
-                        Email = a.Email,
-                        Name = a.Email,
-                        Phone = a.Phone
-                    }));
+                    Items = new ObservableCollection<Questionnaire>(res.Items);
                 }
             }
-            catch
+            catch (Exception ex)
             {
             }
         }
 
         private RelayCommand mNextPageCommand;
-
         public RelayCommand NextPageCommand
             => mNextPageCommand ?? (mNextPageCommand = new RelayCommand(OnNextPage, CanNextPage));
 
         private bool CanNextPage()
         {
-            return !IsBusy && TotalCount != 0 && mCurrentPage < cItemsPerPage/TotalCount;
+            return !IsBusy && TotalCount != 0 && mCurrentPage < TotalCount/ cItemsPerPage;
         }
 
         private void OnNextPage()
@@ -102,8 +95,8 @@ namespace Desktop.ViewModel
             Init();
         }
 
-        private RelayCommand mPreviousPage;
-        public RelayCommand PreviousPage => mPreviousPage ?? (mPreviousPage = new RelayCommand(OnPreviousPage, CanPreviousPage));
+        private RelayCommand mPreviousPageCommand;
+        public RelayCommand PreviousPageCommand => mPreviousPageCommand ?? (mPreviousPageCommand = new RelayCommand(OnPreviousPage, CanPreviousPage));
 
         private bool CanPreviousPage()
         {
@@ -116,8 +109,8 @@ namespace Desktop.ViewModel
             Init();
         }
 
-        private RelayCommand mUploadFile;
-        public RelayCommand UploadFile => mUploadFile ?? (mUploadFile = new RelayCommand(OnUploadFile));
+        private RelayCommand mUploadFileCommand;
+        public RelayCommand UploadFileCommand => mUploadFileCommand ?? (mUploadFileCommand = new RelayCommand(OnUploadFile));
 
         private async void OnUploadFile()
         {

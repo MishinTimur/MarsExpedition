@@ -7,12 +7,43 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance d:Type=viewModel:MainViewModel}"
         Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView Grid.Row="1" ItemsSource="{Binding Items}"></ListView>
+        <ProgressBar IsIndeterminate="True"
+                     Height="20"
+                     Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Content="Загрузить файл" HorizontalAlignment="Center" Command="{Binding UploadFileCommand}" />
+            <ListView Grid.Row="1" ItemsSource="{Binding Items}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Имя"
+                                    DisplayMemberBinding="{Binding Path=Name}" />
+                        <GridViewColumn Header="Дата рождения" 
+                                    DisplayMemberBinding="{Binding Path=DateOfBirth}"  />
+                        <GridViewColumn Header="Email"
+                                    DisplayMemberBinding="{Binding Path=Email}"/>
+                        <GridViewColumn Header="Тел."
+                                    DisplayMemberBinding="{Binding Path=Phone}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="&lt;" Command="{Binding PreviousPageCommand}"/>
+                <TextBlock Text="{Binding CurrentPage}" />
+                <Button Content="&gt;" Command="{Binding NextPageCommand}"/> 
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
