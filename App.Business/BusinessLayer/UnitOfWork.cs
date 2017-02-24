@@ -21,7 +21,9 @@ namespace App.Business.BusinessLayer
                 mContext.Questionnaires.Add(questionnaire);
             }
             else
+            {
                 mContext.Entry(questionnaire).State = EntityState.Modified;
+            }
         }
 
         public async Task<QuestionnariesDTO> GetItems(int page, int itemsPerPage)

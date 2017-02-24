@@ -25,20 +25,27 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Button Content="Загрузить файл" HorizontalAlignment="Center" Command="{Binding UploadFileCommand}" />
-            <ListView Grid.Row="1" ItemsSource="{Binding Items}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Имя"
-                                    DisplayMemberBinding="{Binding Path=Name}" />
-                        <GridViewColumn Header="Дата рождения" 
-                                    DisplayMemberBinding="{Binding Path=DateOfBirth}"  />
-                        <GridViewColumn Header="Email"
-                                    DisplayMemberBinding="{Binding Path=Email}"/>
-                        <GridViewColumn Header="Тел."
-                                    DisplayMemberBinding="{Binding Path=Phone}"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Items}" AutoGenerateColumns="False" 
+                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False"
+                      IsReadOnly="False" SelectionUnit="Cell" SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*" Header="Ф.И.О" Binding="{Binding Path=Name}" />
+                    <DataGridTemplateColumn Width="*" Header="Дата рождения">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DateOfBirth, StringFormat={}{0:dd.MM.yyyy}}"></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding Path=DateOfBirth, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="*" Header="EMail" Binding="{Binding Path=Email}" />
+                    <DataGridTextColumn Width="*" Header="Тел." Binding="{Binding Path=Phone}" />
+                </DataGrid.Columns>
+            </DataGrid>
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="&lt;" Command="{Binding PreviousPageCommand}"/>
                 <TextBlock Text="{Binding CurrentPage}" />

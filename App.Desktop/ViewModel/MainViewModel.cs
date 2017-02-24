@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using App.Business.BusinessLayer;
 using App.Business.DataAccessLayer;
 using App.Business.Infrastructure;
@@ -17,12 +20,14 @@ namespace Desktop.ViewModel
         public MainViewModel()
         {
             mUnitOfWorkFactory = new UnitOfWorkFactory();
+            mParser = new DirtyModelParser();
             mImportHelper = new ImportHelper();
             Init();
         }
 
         private const int cItemsPerPage = 20;
-        private readonly IUnitOfWorkFactory mUnitOfWorkFactory;
+        private static IUnitOfWorkFactory mUnitOfWorkFactory;
+        private static IDirtyModelParser mParser;
         private readonly ImportHelper mImportHelper;
 
         private bool mIsBusy;
@@ -50,8 +55,8 @@ namespace Desktop.ViewModel
             }
         }
 
-        private ObservableCollection<Questionnaire> mItems;
-        public ObservableCollection<Questionnaire> Items
+        private ObservableCollection<QuestionnaireWrapper> mItems;
+        public ObservableCollection<QuestionnaireWrapper> Items
         {
             get { return mItems; }
             set { Set(() => Items, ref mItems, value); }
@@ -72,7 +77,7 @@ namespace Desktop.ViewModel
                 {
                     var res = await uof.GetItems(CurrentPage, cItemsPerPage);
                     TotalCount = res.TotalCount;
-                    Items = new ObservableCollection<Questionnaire>(res.Items);
+                    Items = new ObservableCollection<QuestionnaireWrapper>(res.Items.Select(a => new QuestionnaireWrapper(a)));
                 }
             }
             catch (Exception ex)
@@ -125,6 +130,110 @@ namespace Desktop.ViewModel
                 await mImportHelper.Import(dialog.OpenFile());
                 await LoadItems();
                 IsBusy = false;
+            }
+        }
+
+        public class QuestionnaireWrapper : ObservableObject, IEditableObject
+        {
+            private readonly Questionnaire mQuestionnaire;
+            private string mName;
+            private DateTime mDateOfBirth;
+            private string mEmail;
+            private string mPhone;
+
+            public QuestionnaireWrapper(Questionnaire questionnaire)
+            {
+                mQuestionnaire = questionnaire;
+                Init();
+            }
+
+            private void Init()
+            {
+                mName = mQuestionnaire.Name;
+                mDateOfBirth = mQuestionnaire.DateOfBirth;
+                mEmail = mQuestionnaire.Email;
+                mPhone = mQuestionnaire.Phone;
+            }
+
+            public Guid ID
+            {
+                get { return mQuestionnaire.ID; }
+            }
+
+            public string Name
+            {
+                get { return mName; }
+                set { Set(() => Name, ref mName, value); }
+            }
+
+            public DateTime DateOfBirth
+            {
+                get { return mDateOfBirth; }
+                set { Set(() => DateOfBirth, ref mDateOfBirth, value); }
+            }
+
+            public string Email
+            {
+                get { return mEmail; }
+                set { Set(() => Email, ref mEmail, value); }
+            }
+
+            public string Phone
+            {
+                get { return mPhone; }
+                set { Set(() => Phone, ref mPhone, value); }
+            }
+
+            public void BeginEdit()
+            {
+            }
+
+            public async void EndEdit()
+            {
+                try
+                {
+                    bool hasChanged = false;
+                    Name = mParser.ParseName(mName);
+                    if (mName != mQuestionnaire.Name)
+                    {
+                        hasChanged = true;
+                        mQuestionnaire.Name = mName;
+                    }
+                    if (mDateOfBirth != mQuestionnaire.DateOfBirth)
+                    {
+                        hasChanged = true;
+                        mQuestionnaire.DateOfBirth = mDateOfBirth;
+                    }
+                    Email = mParser.ParseEmail(mEmail);
+                    if (mEmail != mQuestionnaire.Email)
+                    {
+                        hasChanged = true;
+                        mQuestionnaire.Email = mEmail;
+                    }
+                    Phone = mParser.ParsePhone(mPhone);
+                    if (mQuestionnaire.Phone != mPhone)
+                    {
+                        hasChanged = true;
+                        mQuestionnaire.Phone = mPhone;
+                    }
+                    if (hasChanged)
+                    {
+                        using (var uof = mUnitOfWorkFactory.CreateUnitOfWork())
+                        {
+                            uof.AddOrUpdate(mQuestionnaire);
+                            await uof.SaveAsync();
+                        }
+                    }
+                }
+                catch
+                {
+                    CancelEdit();   
+                }
+            }
+
+            public void CancelEdit()
+            {
+                Init();
             }
         }
     }
