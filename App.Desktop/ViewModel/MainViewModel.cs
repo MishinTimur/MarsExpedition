@@ -115,7 +115,7 @@ namespace Desktop.ViewModel
         }
 
         private RelayCommand mUploadFileCommand;
-        public RelayCommand UploadFileCommand => mUploadFileCommand ?? (mUploadFileCommand = new RelayCommand(OnUploadFile));
+        public RelayCommand UploadFileCommand => mUploadFileCommand ?? (mUploadFileCommand = new RelayCommand(OnUploadFile, CanUpload));
 
         private async void OnUploadFile()
         {
@@ -131,6 +131,11 @@ namespace Desktop.ViewModel
                 await LoadItems();
                 IsBusy = false;
             }
+        }
+
+        private bool CanUpload()
+        {
+            return !IsBusy;
         }
 
         public class QuestionnaireWrapper : ObservableObject, IEditableObject

@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <ProgressBar IsIndeterminate="True"
                      Height="20"
-                     Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                      Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
